@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+    <title>hawkers</title>
+    <style>
+        .intro {
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: #22c55e; /* Tailwind green-500 equivalent */
+            transition: 1s;
+        }
+
+        .logo-header {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ffffff;
+            font-family: "Poppins", "sans-serif"; /* Custom font */
+            font-size: 5rem; /* Increased font size */
+            text-align: center; /* Center align text */
+        }
+
+        .logo {
+            position: relative;
+            display: inline-block;
+            bottom: -20px;
+            opacity: 0;
+        }
+
+        .logo.active {
+            bottom: 0;
+            opacity: 1;
+            transition: ease-in-out 0.5s;
+        }
+
+        .logo.fade {
+            bottom: 150px;
+            opacity: 0;
+            transition: ease-in-out 0.5s;
+        }
+
+        .location-selector {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem; /* Gap between icon and text */
+            width: 300px; /* Adjust width as needed */
+        }
+
+        .location-selector img {
+            position: absolute;
+            left: 0.5rem;
+            width: 1.5rem; /* Adjust size as needed */
+            height: auto;
+        }
+
+        .location-selector select {
+            padding-left: 2.5rem; /* Add space for the icon */
+            border-radius: 9999px; /* Curved edges */
+            font-size: 0.875rem; /* Smaller text size (14px) */
+            width: 100%; /* Full width of the container */
+        }
+
+        .location-selector option {
+            font-size: 0.75rem; /* Even smaller text size (12px) */
+        }
+
+        .signin-button {
+            background-color: #22c55e; /* Tailwind green-500 equivalent */
+            border: 0;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px; /* Curved edges */
+            color: #ffffff;
+            font-size: 0.875rem; /* Smaller text size (14px) */
+            display: inline-flex;
+            align-items: center;
+            transition: background-color 0.3s;
+        }
+
+        .signin-button:hover {
+            background-color: #1e9d4f; /* Slightly darker green for hover effect */
+        }
+
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 10px;
+            right: 10px; /* Move to the top-right corner */
+            z-index: 1000; /* Ensure it appears above other elements */
+            background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent background */
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+            color: #fff;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            color: #000;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 0, 0, 0.2); /* Reduced black border width */
+        }
+
+        .close-btn {
+            background-color: transparent;
+            border: none;
+            color: #aaa;
+            font-size: 24px;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            color: #000;
+        }
+
+        .input-box {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-box input {
+            width: 100%;
+            height: 50px;
+            background-color: #f3f4f6; /* Tailwind gray-100 */
+            border: 1px solid #d1d5db; /* Tailwind gray-300 */
+            border-radius: 9999px; /* Full rounded */
+            padding-left: 40px;
+            padding-right: 20px;
+            font-size: 1rem;
+            color: #4b5563; /* Tailwind gray-700 */
+        }
+
+        .input-box i {
+            position: absolute;
+            top: 50%;
+            left: 15px;
+            transform: translateY(-50%);
+            font-size: 1.2rem;
+            color: #9ca3af; /* Tailwind gray-400 */
+        }
+
+        .remember-forget {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            width: 100%;
+            height: 50px;
+            background-color: #22c55e; /* Tailwind green-500 */
+            color: #ffffff;
+            border: none;
+            border-radius: 9999px; /* Full rounded */
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #16a34a; /* Tailwind green-600 */
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .register-link a {
+            color: #22c55e; /* Tailwind green-500 */
+            text-decoration: none;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Intro Screen -->
+    <div class="intro">
+        <div class="logo-header">
+            <span class="logo">haw</span><span class="logo">kers.</span>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="text-gray-600 body-font">
+        <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
+            <a class="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-10 h-10 text-white p-2 bg-green-500 rounded-full" viewBox="0 0 24 24">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                </svg>
+                <span class="ml-6 text-xl">hawkers</span> <!-- Increased gap -->
+            </a>
+
+            <!-- Location Selector -->
+            <div class="relative ml-6 location-selector"> <!-- Increased gap -->
+                <img src="images/location.png" alt="Location Icon"> <!-- Replace with your icon -->
+                <select id="location-select" class="block appearance-none bg-gray-100 border border-gray-300 rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                    <option>Select your location</option>
+                    <option>Greater Noida</option>
+                    <option>New Delhi</option>
+                    <option>Faridabad</option>
+                    <option>Ghaziabad</option>
+                </select>
+            </div>
+
+            <nav class="md:ml-auto flex flex-wrap items-center text-base justify-center mt-4 md:mt-0">
+                <a class="mr-5 hover:text-gray-900">Categories</a>
+                <a class="mr-5 hover:text-gray-900">Wishlist</a>
+                <a class="mr-5 hover:text-gray-900">Orders</a>
+                <a class="mr-5 hover:text-gray-900">Contact</a>
+            </nav>
+            <button class="signin-button inline-flex items-center focus:outline-none" id="openModalBtn">
+                Sign up
+                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-1" viewBox="0 0 24 24">
+                    <path d="M5 12h14M12 5l7 7-7 7"></path>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" id="closeModalBtn">&times;</button>
+            <div class="wrapper">
+                <div class="logo-container">
+                    <span class="logo-text">haw</span><span class="logo-text">kers.</span>
+                </div>
+                <form action="#">
+                    <div class="input-box">
+                        <i class="bx bxs-envelope"></i>
+                        <input type="text" placeholder="Email" required>
+                    </div>
+
+                    <div class="input-box">
+                        <i class="bx bxs-lock-alt"></i>
+                        <input type="password" placeholder="Password" required>
+                    </div>
+
+                    <div class="remember-forget">
+                        <label><input type="checkbox"> Remember me</label>
+                        <a href="#">Forget Password?</a>
+                    </div>
+
+                    <button type="submit" class="btn">Login</button>
+
+                    <div class="register-link">
+                        <p>
+                            Don't have an account?
+                            <a href="signup.html">Sign up</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+<!-- Hero Section -->
+<section class="hero bg-green-500 text-white h-screen flex items-center justify-center relative" style="background-image: url('images/login.jpg'); background-size: cover; background-position: center; padding-top: 5vh;">
+    <div class="absolute inset-0 bg-green-700 bg-opacity-50 rounded-3xl flex items-center justify-center p-10">
+        <div class="text-center max-w-3xl mx-auto">
+            <!-- Image -->
+            <div class="mb-8">
+                <img src="images/hawkers.png" alt="Hero Image" class="w-full max-w-lg mx-auto">
+            </div>
+            <!-- Text -->
+            <p class="text-xl mb-8">Your go-to app for buying fresh fruits and vegetables from street vendors</p>
+            <!-- Buttons -->
+            <div class="flex justify-center gap-4">
+                <button class="bg-gray-100 inline-flex py-4 px-6 rounded-lg items-center hover:bg-gray-200 focus:outline-none text-green-600 text-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-8 h-8" viewBox="0 0 512 512">
+                        <path d="M99.617 8.057a50.191 50.191 0 00-38.815-6.713l230.932 230.933 74.846-74.846L99.617 8.057zM32.139 20.116c-6.441 8.563-10.148 19.077-10.148 30.199v411.358c0 11.123 3.708 21.636 10.148 30.199l235.877-235.877L32.139 20.116zM464.261 212.087l-67.266-37.637-81.544 81.544 81.548 81.548 67.273-37.64c16.117-9.03 25.738-25.442 25.738-43.908s-9.621-34.877-25.749-43.907zM291.733 279.711L60.815 510.629c3.786.891 7.639 1.371 11.492 1.371a50.275 50.275 0 0027.31-8.07l266.965-149.372-74.849-74.847z"></path>
+                    </svg>
+                    <span class="ml-4 flex items-start flex-col leading-none">
+                        <span class="text-xs text-green-600 mb-1">GET IT ON</span>
+                        <span class="title-font font-medium">Google Play</span>
+                    </span>
+                </button>
+                <button class="bg-gray-100 inline-flex py-4 px-6 rounded-lg items-center hover:bg-gray-200 focus:outline-none text-green-600 text-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-8 h-8" viewBox="0 0 305 305">
+                        <path d="M40.74 112.12c-25.79 44.74-9.4 112.65 19.12 153.82C74.09 286.52 88.5 305 108.24 305c.37 0 .74 0 1.13-.02 9.27-.37 15.97-3.23 22.45-5.99 7.27-3.1 14.8-6.3 26.6-6.3 11.22 0 18.39 3.1 25.31 6.1 6.83 2.95 13.87 6 24.26 5.81 22.23-.41 35.88-20.35 47.92-37.94a168.18 168.18 0 0021-43l.09-.28a2.5 2.5 0 00-1.33-3.06l-.18-.08c-3.92-1.6-38.26-16.84-38.62-58.36-.34-33.74 25.76-51.6 31-54.84l.24-.15a2.5 2.5 0 00.7-3.51c-18-26.37-45.62-30.34-56.73-30.82a50.04 50.04 0 00-4.95-.24c-13.06 0-25.56 4.93-35.61 8.9-6.94 2.73-12.93 5.09-17.06 5.09-4.64 0-10.67-2.4-17.65-5.16-9.33-3.7-19.9-7.9-31.1-7.9l-.79.01c-26.03.38-50.62 15.27-64.18 38.86z"></path>
+                        <path d="M212.1 0c-15.76.64-34.67 10.35-45.97 23.58-9.6 11.13-19 29.68-16.52 48.38a2.5 2.5 0 002.29 2.17c1.06.08 2.15.12 3.23.12 15.41 0 32.04-8.52 43.4-22.25 11.94-14.5 17.99-33.1 16.16-49.77A2.52 2.52 0 00212.1 0z"></path>
+                    </svg>
+                    <span class="ml-4 flex items-start flex-col leading-none">
+                        <span class="text-xs text-green-600 mb-1">Download on the</span>
+                        <span class="title-font font-medium">App Store</span>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+        <section class="bg-white dark:bg-gray-900">
+            <div class="container px-6 py-10 mx-auto">
+                <div class="text-center">
+                    <h1 class="text-3xl font-semibold text-gray-800 capitalize lg:text-4xl dark:text-white">Shop from these Categories</h1>
+                    <p class="max-w-lg mx-auto mt-4 text-gray-500 dark:text-gray-300 text-lg">
+                        Explore fresh, local produce from nearby vendors
+                    </p>
+                </div>
+            </div>
+        </section>
+        
+        
+                <div class="grid grid-cols-1 gap-8 mt-8 lg:grid-cols-2">
+                    <div class="relative">
+                        <img class="relative z-10 object-cover w-full rounded-md h-96" src="images/fruit.jpg" alt="fruits">
+        
+                        <div class="relative z-20 max-w-lg p-6 mx-auto -mt-20 bg-white rounded-md shadow dark:bg-gray-800">
+                            <a href="#" class="font-semibold text-gray-800 hover:underline dark:text-white md:text-xl">
+                                <h1 style="font-size: xx-large; position: center;">Fruits</h1>
+                            </a>
+                            <p class="mt-3 text-sm text-gray-500 dark:text-gray-300 md:text-sm">
+                                Discover the best features to enhance your shopping experience.
+                            </p>
+                            <p class="mt-3 text-s text-blue-500">Browse</p>
+                        </div>
+                    </div>
+        
+                    <div class="relative">
+                        <img class="relative z-10 object-cover w-full rounded-md h-96" src="images/veg.jpg" alt="vegetables">
+        
+                        <div class="relative z-20 max-w-lg p-6 mx-auto -mt-20 bg-white rounded-md shadow dark:bg-gray-800">
+                            <a href="#" class="font-semibold text-gray-800 hover:underline dark:text-white md:text-xl">
+                                <h1 style="font-size: xx-large; position: center;">Vegetables</h1>
+                            </a>
+                            <p class="mt-3 text-sm text-gray-500 dark:text-gray-300 md:text-sm">
+                                Learn creative ways to use sticky notes to tackle your daily challenges.
+                            </p>
+                            <p class="mt-3 text-s text-blue-500">Browse</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+
+    <footer class="text-gray-600 body-font">
+        <div class="container px-5 py-24 mx-auto flex md:items-center lg:items-start md:flex-row md:flex-nowrap flex-wrap flex-col">
+          <div class="w-64 flex-shrink-0 md:mx-0 mx-auto text-center md:text-left md:mt-0 mt-10">
+            <a class="flex title-font font-medium items-center md:justify-start justify-center text-gray-900">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-10 h-10 text-white p-2 bg-green-500 rounded-full" viewBox="0 0 24 24">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+              </svg>
+              <span class="ml-3 text-xl">hawkers</span>
+            </a>
+            <p class="mt-2 text-sm text-gray-500">Your go-to app for buying fresh fruits and vegetables from street vendors</p>
+          </div>
+          <div class="flex-grow flex flex-wrap md:pr-20 -mb-10 md:text-left text-center order-first">
+            <div class="lg:w-1/4 md:w-1/2 w-full px-4">
+              <h2 class="title-font font-medium text-gray-900 tracking-widest text-sm mb-3">CATEGORIES</h2>
+              <nav class="list-none mb-10">
+                <li>
+                  <a class="text-gray-600 hover:text-gray-800">First Link</a>
+                </li>
+                <li>
+                  <a class="text-gray-600 hover:text-gray-800">Second Link</a>
+                </li>
+                <li>
+                  <a class="text-gray-600 hover:text-gray-800">Third Link</a>
+                </li>
+                <li>
+                  <a class="text-gray-600 hover:text-gray-800">Fourth Link</a>
+                </li>
+              </nav>
+            </div>
+            <div class="lg:w-1/4 md:w-1/2 w-full px-4">
+              <h2 class="title-font font-medium text-gray-900 tracking-widest text-sm mb-3">CATEGORIES</h2>
+              <nav class="list-none mb-10">
+                <li>
+                  <a class="text-gray-600 hover:text-gray-800">First Link</a>
+                </li>
+                <li>
+                  <a class="text-gray-600 hover:text-gray-800">Second Link</a>
+                </li>
+                <li>
+                  <a class="text-gray-600 hover:text-gray-800">Third Link</a>
+                </li>
+                <li>
+                  <a class="text-gray-600 hover:text-gray-800">Fourth Link</a>
+                </li>
+              </nav>
+            </div>
+            <div class="lg:w-1/4 md:w-1/2 w-full px-4">
+              <h2 class="title-font font-medium text-gray-900 tracking-widest text-sm mb-3">CATEGORIES</h2>
+              <nav class="list-none mb-10">
+                <li>
+                  <a class="text-gray-600 hover:text-gray-800">First Link</a>
+                </li>
+                <li>
+                  <a class="text-gray-600 hover:text-gray-800">Second Link</a>
+                </li>
+                <li>
+                  <a class="text-gray-600 hover:text-gray-800">Third Link</a>
+                </li>
+                <li>
+                  <a class="text-gray-600 hover:text-gray-800">Fourth Link</a>
+                </li>
+              </nav>
+            </div>
+            <div class="lg:w-1/4 md:w-1/2 w-full px-4">
+              <h2 class="title-font font-medium text-gray-900 tracking-widest text-sm mb-3">CATEGORIES</h2>
+              <nav class="list-none mb-10">
+                <li>
+                  <a class="text-gray-600 hover:text-gray-800">First Link</a>
+                </li>
+                <li>
+                  <a class="text-gray-600 hover:text-gray-800">Second Link</a>
+                </li>
+                <li>
+                  <a class="text-gray-600 hover:text-gray-800">Third Link</a>
+                </li>
+                <li>
+                  <a class="text-gray-600 hover:text-gray-800">Fourth Link</a>
+                </li>
+              </nav>
+            </div>
+          </div>
+        </div>
+        <div class="bg-gray-100">
+          <div class="container mx-auto py-4 px-5 flex flex-wrap flex-col sm:flex-row">
+            <p class="text-gray-500 text-sm text-center sm:text-left">Fresh Produce, Local Vendors —
+              <a href="https://twitter.com/knyttneve" rel="noopener noreferrer" class="text-gray-600 ml-1" target="_blank">hawkers</a>
+            </p>
+            <span class="inline-flex sm:ml-auto sm:mt-0 mt-2 justify-center sm:justify-start">
+              <a class="text-gray-500">
+                <svg fill="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5" viewBox="0 0 24 24">
+                  <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"></path>
+                </svg>
+              </a>
+              <a class="ml-3 text-gray-500">
+                <svg fill="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5" viewBox="0 0 24 24">
+                  <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"></path>
+                </svg>
+              </a>
+              <a class="ml-3 text-gray-500">
+                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5" viewBox="0 0 24 24">
+                  <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+                  <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zm1.5-4.87h.01"></path>
+                </svg>
+              </a>
+              <a class="ml-3 text-gray-500">
+                <svg fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="0" class="w-5 h-5" viewBox="0 0 24 24">
+                  <path stroke="none" d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"></path>
+                  <circle cx="4" cy="4" r="2" stroke="none"></circle>
+                </svg>
+              </a>
+            </span>
+          </div>
+        </div>
+      </footer>
+
+    <script>
+        let intro = document.querySelector('.intro');
+        let logoSpan = document.querySelectorAll('.logo');
+        let openModalBtn = document.getElementById('openModalBtn');
+        let closeModalBtn = document.getElementById('closeModalBtn');
+        let loginModal = document.getElementById('loginModal');
+
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                logoSpan.forEach((span, idx) => {
+                    setTimeout(() => {
+                        span.classList.add('active');
+                    }, (idx + 1) * 400);
+                });
+
+                setTimeout(() => {
+                    logoSpan.forEach((span, idx) => {
+                        setTimeout(() => {
+                            span.classList.remove('active');
+                            span.classList.add('fade');
+                        }, (idx + 1) * 50);
+                    });
+                }, 2000);
+
+                setTimeout(() => {
+                    intro.style.top = '-100vh';
+                }, 2300);
+            });
+        });
+
+        openModalBtn.addEventListener('click', () => {
+            loginModal.style.display = 'block';
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            loginModal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target == loginModal) {
+                loginModal.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

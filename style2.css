@@ -1,0 +1,57 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    background: url('images/login.jpg') no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+.wrapper {
+    background: rgba(255, 255, 255, 0.9); /* Slightly transparent white */
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    color: #333;
+}
+
+.logo-container {
+    text-align: center;
+    width: 100%;
+}
+
+.logo {
+    display: inline-block;
+    font-family: 'Poppins', sans-serif;
+    font-size: 3rem;
+    color: #22c55e;
+    opacity: 0;
+}
+
+.animate-logo {
+    animation: fadeInUp 2s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Keep all other styles from the original */
+.input-box input::placeholder {
+    color: #999;
+}
+
+.input-box i {
+    color: #999;
+}

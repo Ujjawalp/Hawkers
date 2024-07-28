@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+   
+    <script src="https://www.gstatic.com/firebasejs/10.7.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js"></script>
+    <title>Sign Up</title>
+
+    <style>
+        #navbar {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: white;
+        }
+
+        .intro {
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: #22c55e; /* Tailwind green-500 equivalent */
+            transition: 1s;
+        }
+
+        .logo-header {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ffffff;
+            font-family: "Poppins", "sans-serif"; /* Custom font */
+            font-size: 5rem; /* Increased font size */
+            text-align: center; /* Center align text */
+        }
+
+        .logo {
+            position: relative;
+            display: inline-block;
+            bottom: -20px;
+            opacity: 0;
+        }
+
+        .logo.active {
+            bottom: 0;
+            opacity: 1;
+            transition: ease-in-out 0.5s;
+        }
+
+        .logo.fade {
+            bottom: 150px;
+            opacity: 0;
+            transition: ease-in-out 0.5s;
+        }
+    </style>
+    
+</head> 
+<body>
+    <!-- Intro Screen -->
+    <div class="intro">
+        <div class="logo-header">
+            <span class="logo">haw</span><span class="logo">kers.</span>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="main-content" style="display: none;">
+        <header id="navbar" class="text-gray-600 body-font">
+            <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
+                <a class="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-10 h-10 text-white p-2 bg-green-500 rounded-full" viewBox="0 0 24 24">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                    </svg>
+                    <span class="ml-3 text-xl">hawkers</span>
+                    
+                </a>
+                <nav class="md:ml-auto flex flex-wrap items-center text-base justify-center">
+                    <a href="index.html" class="mr-5 hover:text-gray-900">Home</a>
+                    <a class="mr-5 hover:text-gray-900">Categories</a>
+                    <a class="mr-5 hover:text-gray-900">Wishlist</a>
+                    <a class="mr-5 hover:text-gray-900">Orders</a>
+                    <a href="contact.html" class="mr-5 hover:text-gray-900">Contact</a>
+                </nav>
+                <a href="signup.html">
+                    <button class="signin-button inline-flex items-center focus:outline-none">
+                        Sign up
+                        <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-1" viewBox="0 0 24 24">
+                            <path d="M5 12h14M12 5l7 7-7 7"></path>
+                        </svg>
+                    </button></a>
+                </div>
+            </div>
+        </header>
+
+        <section class="text-gray-600 body-font relative">
+            <div class="container px-5 py-24 mx-auto">
+                <div class="flex flex-col text-center w-full mb-12">
+                    <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">Sign Up</h1>
+                    <p class="lg:w-2/3 mx-auto leading-relaxed text-base">Join us today! Fill out the form below to get started.</p>
+                </div>
+                <div class="lg:w-1/2 md:w-2/3 mx-auto">
+                    <div class="flex flex-wrap -m-2">
+                        <div class="p-2 w-full">
+                            <div class="relative">
+                                <label for="name" class="leading-7 text-sm text-gray-600">Name</label>
+                                <input type="text" id="name" name="name" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-green-500 focus:bg-white focus:ring-2 focus:ring-green-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" required>
+                            </div>
+                        </div>
+                        
+                        <div class="p-2 w-full">
+                            <div class="relative">
+                                <label for="email" class="leading-7 text-sm text-gray-600">Email</label>
+                                <input type="email" id="email" name="email" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-green-500 focus:bg-white focus:ring-2 focus:ring-green-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" required>
+                            </div>
+                        </div>
+
+                        <div class="p-2 w-full">
+                            <div class="relative">
+                                <label for="password" class="leading-7 text-sm text-gray-600">Password</label>
+                                <input type="password" id="password" name="password" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-green-500 focus:bg-white focus:ring-2 focus:ring-green-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" required>
+                            </div>
+                        </div>
+                        <div class="p-2 w-full">
+                            <button class="flex mx-auto text-white bg-green-500 border-0 py-2 px-8 focus:outline-none hover:bg-green-600 rounded text-lg" id="submit">Sign Up</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        let intro = document.querySelector('.intro');
+        let mainContent = document.getElementById('main-content');
+        let logoSpan = document.querySelectorAll('.logo');
+
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                logoSpan.forEach((span, idx) => {
+                    setTimeout(() => {
+                        span.classList.add('active');
+                    }, (idx + 1) * 400);
+                });
+
+                setTimeout(() => {
+                    logoSpan.forEach((span, idx) => {
+                        setTimeout(() => {
+                            span.classList.remove('active');
+                            span.classList.add('fade');
+                        }, (idx + 1) * 50);
+                    });
+                }, 2000);
+
+                setTimeout(() => {
+                    intro.style.top = '-100vh';
+                    mainContent.style.display = 'block';
+                }, 2300);
+            });
+        });
+    </script>
+</body>
+</html>
